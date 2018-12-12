@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block title_block %}{{PROJECT_NAME}} - Welcome{% endblock %}
+{% block h1_block %}Welcome to {{PROJECT_NAME}}{% endblock %}
+
+{% block body_block %}
+	{% if user.is_authenticated %}
+		<p>Logged in as: <a href="{% url 'accounts:account_info' %}">{{user.username}}</a></p>
+		<p><a href="{% url 'accounts:logout' %}">Logout</a></p>
+	{% else %}
+		<p>You are not logged in.</p>
+		<p><a href="{% url 'accounts:login' %}">Login</a></p>
+		<p><a href="{% url 'accounts:register' %}">Register</a></p>
+	{% endif %}
+	<p><a href="{% url 'main:about' %}">About {{PROJECT_NAME}}</a></p>
+	<p><a href="{% url 'main:instructions' %}">Instructions</a></p>
+	<hr />
+	{% if user.is_authenticated %}
+		<p><a href="{% url 'main:eas_list' %}">My Exams</a></p>
+		<p><a href="{% url 'main:user_exam_list' user.username %}">Exams owned by me</a></p>
+	{% endif %}
+	<p><a href="{% url 'main:public_exam_list' %}">Public Exams</a></p>
+	<p><a href="{% url 'main:user_list' %}">List of all exam owners</a></p>
+{% endblock %}

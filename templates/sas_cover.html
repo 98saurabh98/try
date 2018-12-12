@@ -1,0 +1,168 @@
+{% extends 'eas_cover.html' %}
+
+{% block h1_block %}{{section.name}}{% endblock %}
+
+{% block eas_block %}
+	<p>
+		<div>
+		{% if prevsid %}
+			<a href="{% url 'main:sas_cover' prevsid %}">
+			Previous Section ({{prevsecname}})
+			</a>
+		{% else %}
+			Previous Section
+		{% endif %}
+		</div>
+		<div>
+		{% if nextsid %}
+			<a href="{% url 'main:sas_cover' nextsid %}">
+			Next Section ({{nextsecname}})
+			</a>
+		{% else %}
+			Next Section
+		{% endif %}
+		</div>
+	</p>
+
+	{% if unlocked %}
+		<p>{{section.info}}</p>
+		<p><a href="{% url 'main:answer' answer_list.0.id %}">Start attempting this section from first question</a></p>
+		<div style="display:inline-block;float:left;">
+			Marking Scheme:<br />
+			<table>
+				<tr>
+					<td>Correct answer</td>
+					<td>{{section.correct_marks}}</td>
+				</tr>
+				<tr>
+					<td>Wrong answer</td>
+					<td>{{section.wrong_marks}}</td>
+				</tr>
+				<tr>
+					<td>Not attempting</td>
+					<td>{{section.na_marks}}</td>
+				</tr>
+				<tr>
+					<td>Deduction on viewing hint</td>
+					<td>{{section.hint_deduction}}</td>
+				</tr>
+			</table>
+		</div>
+
+		<div style="display:inline-block;float:right;">
+			<div>Number of Questions: {{sas.tot}}</div>
+			<div>Maximum marks: {{max_marks}}</div>
+			{% if section.max_questions_to_attempt == 0 %}
+			<div>Attempt all questions in this section (if you can).</div>
+			{% else %}
+			<div>You can attempt a maximum of {{section.max_questions_to_attempt}} questions.</div>
+			{% endif %}
+		</div>
+
+		<div style="clear:both">
+		{% if section.allowed_attempts <= 0 %}
+			<p>You can submit an answer to a question as many times as you want.</p>
+			{% if section.allowed_attempts == -1 %}
+				You will be shown your attempt status after every submit.
+			{% endif %}
+		{% else %}
+			<p>You can submit an answer a maximum of {{section.allowed_attempts}} times per question.
+			You will be shown your attempt status after every submit.
+			{% if section.show_correct_answer %}
+				You will be shown the correct answer of a question after exhausting all attempts of that question.
+			{% endif %}
+		{% endif %}
+
+		{% if timer_status == EAS.TIMER_ENDED %}
+			{% if can_view_solutions %}
+				<p>{{section.postinfo}}</p>
+			{% endif %}
+			<p>Tags: {% for tag in section.get_all_tags %}{{tag.name}}, {% endfor %}</p>
+		{% endif %}
+		<hr />
+		</div>
+
+		<p>Section stats:</p>
+		<table>
+			{% if show_results %}
+			<tr>
+				<td>Correct Answers</td>
+				<td>{{sas.corr}}</td>
+			</tr>
+			<tr>
+				<td>Wrong Answers</td>
+				<td>{{sas.wrong}}</td>
+			</tr>
+			{% endif %}
+			<tr>
+				<td>Attempted Questions</td>
+				<td>{{sas.att}}</td>
+			</tr>
+			<tr>
+				<td>Unattempted Questions</td>
+				<td>{{sas.na}}</td>
+			</tr>
+			<tr>
+				<td>Total Questions</td>
+				<td>{{sas.tot}}</td>
+			</tr>
+			{% if show_results %}
+			<tr>
+				<td>Total Marks</td>
+				<td>{{sas.marks}}</td>
+			</tr>
+			{% endif %}
+			<tr>
+				<td>Percentage</td>
+				<td>{{sas.perc}}</td>
+			</tr>
+		</table>
+		<p>Questions in this section:</p>
+		<table>
+			<tr>
+				<td>Sno</td>
+				<td>Question</td>
+				<td>Status</td>
+				{% if hint_col %}<td>Viewed hint</td>{% endif %}
+				<td>Marks</td>
+			</tr>
+			{% for answer in answer_list %}
+			<tr>
+				<td>{{forloop.counter}}</td>
+				<td>
+					<a href="{% url 'main:answer' answer.id %}">
+					{{answer.get_typed_question}}
+					</a>
+				</td>
+				<td>{{answer.result_str}}</td>
+				{% if hint_col %}
+					<td>{% if answer.viewed_hint %}{{unicode_dict.check_box|safe}}{% endif %}</td>
+				{% endif %}
+				<td>{{answer.marks}}</td>
+			</tr>
+			{% endfor %}
+			<tr>
+				<td></td>
+				<td>Total</td>
+				<td></td>
+				{% if hint_col %}
+					<td>{{sas.hints}}</td>
+				{% endif %}
+				<td>{{sas.marks}}</td>
+			</tr>
+		</table>
+	{% else %}
+		<p>This section is locked. You need to
+		{% if section.unlock_questions != None %}
+			attempt at least {{section.unlock_questions}} questions
+			{% if section.unlock_marks != None %}
+				{% if section.unlock_both_needed %} and {% else %} or {% endif %}
+				score at least {{section.unlock_marks}} marks
+			{% endif %}
+		{% else %}
+			score at least {{section.unlock_marks}} marks
+		{% endif %}
+		to unlock it.
+		</p>
+	{% endif %}
+{% endblock %}

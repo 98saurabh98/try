@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html>
+<head>
+	<title>{% block title_block %}
+		{% if base_title %}
+			{{base_title}}
+		{% else %}
+			{{PROJECT_NAME}}
+		{% endif %}
+	{% endblock %}</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<link rel="stylesheet" href="{{settings.LIB_URLS.bootstrap_css}}" />
+	<script src="{{settings.LIB_URLS.jquery}}"></script>
+	<script src="{{settings.LIB_URLS.bootstrap_js}}"></script>
+	<link rel="stylesheet" href="{% static 'base.css' %}" />
+	<!--<script src="{{settings.LIB_URLS.mathjax}}?config=TeX-AMS-MML_HTMLorMML"></script>-->
+	<style>
+	{% block style_block %}{% endblock %}
+	</style>
+</head>
+
+<body>
+<h1>{% block h1_block %}{{base_h1}}{% endblock %}</h1>
+{% block body_block %}
+	{{base_body}}
+{% endblock %}
+<p><a href="{% url 'main:index' %}">Back to Homepage</a></p>
+</body>
+</html>

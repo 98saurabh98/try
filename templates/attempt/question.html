@@ -1,0 +1,31 @@
+{% extends 'question_base.html' %}
+
+{% block question_block %}
+	<form method="POST" action="{% url 'main:submit' answer.id %}" >
+		{% csrf_token %}
+		{% block input_block %}{% endblock %}
+		{% if not is_attable2 %}<p>You cannot answer more questions from this section. Clear another answer if you want to answer this question.</p>{% endif %}
+		<input type="submit" name="submit" value="Submit"
+			{% if not is_attable2 %}disabled="disabled"{% endif %} /><br />
+		{% if nextaid %}
+			<input type="submit" name="submit_and_next" value="Submit and next question"
+				{% if not is_attable2 %}disabled="disabled"{% endif %} />
+		{% elif nextsid %}
+			<input type="submit" name="submit_and_next" value="Submit and next section" 
+				{% if not is_attable2 %}disabled="disabled"{% endif %} />
+		{% else %}
+			<input type="button" value="Submit and next question" disabled="true" />
+		{% endif %}
+	</form>
+
+	<p>
+	{% if remaining_attempts != "" %}
+		<div>Remaining attempts = {{remaining_attempts}}</div>
+	{% endif %}
+	{% if section.allowed_attempts != 0 %}
+		<div>Result: {{result_str}}</div>
+		<div>Marks obtained: {{marks}}</div>
+	{% endif %}
+	</p>
+
+{% endblock %}

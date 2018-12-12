@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block title_block %}{{PROJECT_NAME}} - About{% endblock %}
+{% block h1_block %}About {{PROJECT_NAME}}{% endblock %}
+
+{% block body_block %}
+<img src="{% static 'logo.jpg' %}" />
+<p>{{PROJECT_NAME}} is an educational site for making and taking tests.</p>
+<p>This site is running on Python {{python_version}} and Django {{django_version}}</p>
+<p>Contributors:</p>
+<ul>
+	{% for person in contributors %}
+	<li>{{person}}</li>
+	{% endfor %}
+</ul>
+{% endblock %}

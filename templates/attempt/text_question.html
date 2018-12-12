@@ -1,0 +1,7 @@
+{% extends 'attempt/question.html' %}
+
+{% block input_block %}
+	<input type="text" name="response" value="{{special_answer.response}}" />
+	<p>Case-sensitive: {{case_sens}}</p>
+	{% if special_question.use_regex %}<p>Answer will be checked using Regular Expressions</p>{% endif %}
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends 'eas_cover.html' %}
+
+{% block h1_block %}{% endblock %}
+
+{% block eas_block %}
+<p>Question Info:</p>
+<ul>
+	<li>Section: <a href="{% url 'main:sas_cover' sas.id %}">{{section.name}}</a></li>
+	{% if qno %}
+	<li>Question no: {{qno}}</li>
+	{% endif %}
+	<!--{% if question.title %}
+		<li>Question title: {{question.title}}</li>
+	{% endif %}-->
+</ul>
+
+<p>
+	<div>
+	{% if prevaid %}
+	<a href="{% url 'main:answer' prevaid %}">Previous Question</a>
+	{% elif prevsid %}
+	<a href="{% url 'main:sas_cover' prevsid %}">Previous Section</a>
+	{% else %}
+	Previous Question
+	{% endif %}
+	</div>
+
+	<div>
+	{% if nextaid %}
+	<a href="{% url 'main:answer' nextaid %}">Next Question</a>
+	{% elif nextsid %}
+	<a href="{% url 'main:sas_cover' nextsid %}">Next Section</a>
+	{% else %}
+	Next Question
+	{% endif %}
+	</div>
+</p>
+<hr />
+
+<div>{{question.text}}</div>
+
+{% if question.hint != "" %}
+	{% if answer.viewed_hint or time_status == EAS.TIMER_ENDED %}
+		<p>Hint:</p>
+		<div>{{question.hint}}</div>
+	{% endif %}
+{% endif %}
+
+{% block question_block %}{% endblock %}
+
+{% endblock %}
